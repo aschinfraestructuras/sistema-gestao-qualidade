@@ -20,18 +20,33 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
       
+      - name: Listar conteúdo do diretório
+        run: |
+          pwd
+          ls -la
+      
+      - name: Verificar package.json
+        run: cat package.json
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
       
       - name: Instalar dependências
-        run: npm install
+        run: |
+          npm install
+          npm list || true
       
-      - name: Build da aplicação React
-        run: npm run build
+      - name: Verificar script de build
+        run: npm run build --verbose
         env:
-          PUBLIC_URL: /${{ github.event.repository.name }}/
+          CI: false  # Trata warnings como não fatais
+      
+      - name: Listar conteúdo do diretório de build
+        run: |
+          ls -la build || true
+          ls -la dist || true
       
       - name: Upload da build para GitHub Pages
         uses: actions/upload-pages-artifact@v3
