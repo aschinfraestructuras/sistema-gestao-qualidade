@@ -13,6 +13,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -21,15 +24,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: ./client/package-lock.json
       
       - name: Instalar dependências
-        working-directory: ./client
-        run: npm ci
+        run: npm install
       
       - name: Build da aplicação React
-        working-directory: ./client
         run: npm run build
         env:
           PUBLIC_URL: /${{ github.event.repository.name }}/
