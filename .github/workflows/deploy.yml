@@ -13,9 +13,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./client
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -25,14 +22,14 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-      
-      - name: Limpar cache npm
-        run: npm cache clean --force
+          cache-dependency-path: ./client/package-lock.json
       
       - name: Instalar dependências
-        run: npm install
+        working-directory: ./client
+        run: npm ci
       
       - name: Build da aplicação React
+        working-directory: ./client
         run: npm run build
         env:
           PUBLIC_URL: /${{ github.event.repository.name }}/
@@ -53,4 +50,3 @@ jobs:
       - name: Deploy para GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
