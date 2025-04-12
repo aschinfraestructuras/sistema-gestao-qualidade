@@ -25,10 +25,12 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: './client/package-lock.json'
+      
+      - name: Limpar cache npm
+        run: npm cache clean --force
       
       - name: Instalar dependências
-        run: npm ci
+        run: npm install
       
       - name: Build da aplicação React
         run: npm run build
